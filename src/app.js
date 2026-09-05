@@ -16,6 +16,6 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 
-app.use("/webhook", webhookRoutes);
+app.use("/webhook", webhookRoutes)
 
 module.exports = app;
