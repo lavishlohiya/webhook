@@ -1,6 +1,7 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.route");
+const webhookRoutes = require("./routes/webhook.route");
 
 const app = express();
 
@@ -14,5 +15,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/auth", authRoutes);
+
+app.use("/webhook", webhookRoutes);
 
 module.exports = app;

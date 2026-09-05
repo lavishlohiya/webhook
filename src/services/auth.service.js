@@ -34,4 +34,20 @@ const loginUser = async (username, password) => {
     return token;
 };
 
-module.exports = { registerUser, loginUser };
+const deleteUser = async (id) => {
+    const existingUser = await userRepository.getUserByUsername(username);
+
+    if (!existingUser) {
+      throw new Error("User does not exists");
+    }
+
+    const isMatch = await bcrypt.compare(password, existingUser.password);
+
+    if (!isMatch) {
+      throw new Error("Invalid username or password");
+    }
+
+    return await userRepository.deleteUser(existingUser.id);
+}
+
+module.exports = { registerUser, loginUser, deleteUser };

@@ -39,4 +39,19 @@ const getUserById = async (id) => {
     return result.rows[0];
 };
 
-module.exports = { createUser, getUserByUsername, getUserById };
+const deleteUser = async (id) => {
+    const query = `
+        DELETE FROM users
+        WHERE id = $1
+        RETURNING *
+    `;
+
+    const result = await pool.query(query, [id]);
+
+    return result.rows[0] || null;
+}
+
+module.exports = {
+    createUser, getUserByUsername, getUserById,
+    deleteUser
+};
