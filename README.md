@@ -1,5 +1,5 @@
 # Webhook delivery api
 
-## currently in progress
+## completed, documentation left
 
-## Will complete in this week
+## will complete in this week
