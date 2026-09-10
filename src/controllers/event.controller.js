@@ -1,3 +1,4 @@
+const pool = require("../config/db");
 const eventService = require("../services/event.service");
 
 const createEvent = async (req, res) => {
@@ -46,4 +47,43 @@ const deleteEvent = async (req, res) => {
     }
 };
 
-module.exports = { createEvent, getEvents, deleteEvent };
+const sendEvent = async (req, res) => {
+  const { event_name, data } = req.body;
+
+  if (!event_name || !data) {
+    return res.status(400).json({
+      message: "event_name and data are required",
+    });
+  }
+
+  const result = await pool.query(
+    `SELECT w.url
+         FROM webhooks w
+         JOIN webhook_events we
+         ON w.id = we.webhook_id
+         WHERE we.event_name = $1`,
+    [event_name],
+  );
+
+  for (const webhook of result.rows) {
+    await fetch(webhook.url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        event_name,
+        data,
+      }),
+    });
+  }
+
+  res.status(200).json({
+    message: "Event sent",
+  });
+};
+
+module.exports = {
+    createEvent, getEvents,
+    deleteEvent, sendEvent
+};

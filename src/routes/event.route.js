@@ -10,4 +10,6 @@ router.get("/event", authMiddleware, eventController.getEvents);
 
 router.delete("/delete", authMiddleware, eventController.deleteEvent);
 
+router.post("/send", authMiddleware, eventController.sendEvent);
+
 module.exports = router;
