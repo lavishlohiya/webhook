@@ -143,6 +143,3 @@ Planned enhancements for scalability and production readiness:
 
 ---
 
-## License
-
-ISC License
