@@ -1,5 +1,8 @@
 const pool = require("../config/db");
 
+/**
+ * Create a new webhook event subscription record
+ */
 const createEvent = async (webhookId, event) => {
     const query = `
         INSERT INTO webhook_events
@@ -9,12 +12,14 @@ const createEvent = async (webhookId, event) => {
     `;
 
     const values = [webhookId, event];
-
     const result = await pool.query(query, values);
 
     return result.rows[0];
 };
 
+/**
+ * Fetch a specific event subscription by webhook ID and event topic name
+ */
 const getEvent = async (webhookId, event) => {
     const query = `
         SELECT *
@@ -24,12 +29,14 @@ const getEvent = async (webhookId, event) => {
     `;
 
     const values = [webhookId, event];
-
     const result = await pool.query(query, values);
 
     return result.rows[0];
-}
+};
 
+/**
+ * Fetch all event subscriptions associated with a webhook ID
+ */
 const getEvents = async (webhookId) => {
     const query = `
         SELECT *
@@ -42,6 +49,9 @@ const getEvents = async (webhookId) => {
     return result.rows;
 };
 
+/**
+ * Delete a specific event subscription for a user's webhook
+ */
 const deleteEvent = async (userId, webhookId, event) => {
   const query = `
         DELETE FROM webhook_events we
@@ -54,13 +64,14 @@ const deleteEvent = async (userId, webhookId, event) => {
     `;
 
   const values = [userId, webhookId, event];
-
   const result = await pool.query(query, values);
 
   return result.rows[0];
 };
 
 module.exports = {
-    createEvent, getEvent, getEvents,
+    createEvent,
+    getEvent,
+    getEvents,
     deleteEvent
-};
+};

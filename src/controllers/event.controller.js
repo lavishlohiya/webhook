@@ -1,6 +1,9 @@
 const pool = require("../config/db");
 const eventService = require("../services/event.service");
 
+/**
+ * Bind an event topic/name to a specific webhook ID
+ */
 const createEvent = async (req, res) => {
     try {
         const { id, event } = req.body;
@@ -12,10 +15,13 @@ const createEvent = async (req, res) => {
         console.error(err);
         return res.status(404).json({
             message: err.message || "Something went wrong"
-        })
+        });
     }
 };
 
+/**
+ * Fetch all events bound to a specific webhook ID
+ */
 const getEvents = async (req, res) => {
     try {
         const { id } = req.body;
@@ -27,10 +33,13 @@ const getEvents = async (req, res) => {
         console.error(err);
         return res.status(404).json({
             message: err.message || "Something went wrong"
-        })
+        });
     }
 };
 
+/**
+ * Delete a specific event binding from a webhook
+ */
 const deleteEvent = async (req, res) => {
     try {
         const { id, event } = req.body;
@@ -43,10 +52,13 @@ const deleteEvent = async (req, res) => {
         console.error(err);
         return res.status(404).json({
             message: err.message || "Something went wrong"
-        })
+        });
     }
 };
 
+/**
+ * Dispatch event payload to all target webhook endpoints registered for the event_name
+ */
 const sendEvent = async (req, res) => {
   const { event_name, data } = req.body;
 
@@ -56,6 +68,7 @@ const sendEvent = async (req, res) => {
     });
   }
 
+  // Retrieve target webhook URLs associated with the specified event topic
   const result = await pool.query(
     `SELECT w.url
          FROM webhooks w
@@ -65,6 +78,7 @@ const sendEvent = async (req, res) => {
     [event_name],
   );
 
+  // Send HTTP POST requests to each subscribed webhook endpoint
   for (const webhook of result.rows) {
     await fetch(webhook.url, {
       method: "POST",
@@ -84,6 +98,8 @@ const sendEvent = async (req, res) => {
 };
 
 module.exports = {
-    createEvent, getEvents,
-    deleteEvent, sendEvent
-};
+    createEvent,
+    getEvents,
+    deleteEvent,
+    sendEvent
+};

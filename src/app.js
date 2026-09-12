@@ -6,19 +6,20 @@ const eventRoutes = require("./routes/event.route");
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
+// Global Middlewares
+app.use(express.json());       // Parse incoming JSON payloads
+app.use(cookieParser());       // Parse cookies attached to incoming requests
 
+// Health check root endpoint
 app.get("/", (req, res) => {
     res.json({
         message: "Webhook API is running"
-    })
-})
+    });
+});
 
-app.use("/auth", authRoutes);
+// Route Registrations
+app.use("/auth", authRoutes);       // Authentication routes (register, login, logout, delete)
+app.use("/webhook", webhookRoutes); // Webhook registration and management routes
+app.use("/event", eventRoutes);     // Event creation, subscription, and dispatch routes
 
-app.use("/webhook", webhookRoutes);
-
-app.use("/event", eventRoutes);
-
-module.exports = app;
+module.exports = app;

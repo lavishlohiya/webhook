@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 
+/**
+ * Middleware to verify JWT token stored in cookies and attach authenticated user context to request
+ */
 const authMiddleware = (req, res, next) => {
+  // Extract token from request cookies
   const token = req.cookies.token;
 
   if (!token) {
@@ -10,8 +14,10 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
+    // Verify JWT signature using secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Attach user payload to request object
     req.user = {
       id: decoded.id,
     };
@@ -25,3 +31,4 @@ const authMiddleware = (req, res, next) => {
 };
 
 module.exports = authMiddleware;
+

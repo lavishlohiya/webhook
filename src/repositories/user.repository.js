@@ -1,5 +1,8 @@
 const pool = require("../config/db");
 
+/**
+ * Insert a new user record into the database
+ */
 const createUser = async (username, password) => {
     const query = `
         INSERT INTO users
@@ -9,12 +12,14 @@ const createUser = async (username, password) => {
     `;
 
     const values = [username, password];
-
     const result = await pool.query(query, values);
 
     return result.rows[0];
 };
 
+/**
+ * Retrieve user record by username
+ */
 const getUserByUsername = async (username) => {
     const query = `
         SELECT *
@@ -27,6 +32,9 @@ const getUserByUsername = async (username) => {
     return result.rows[0];
 };
 
+/**
+ * Retrieve user record by user ID
+ */
 const getUserById = async (id) => {
     const query = `
         SELECT *
@@ -39,6 +47,9 @@ const getUserById = async (id) => {
     return result.rows[0];
 };
 
+/**
+ * Delete user record by user ID
+ */
 const deleteUser = async (id) => {
     const query = `
         DELETE FROM users
@@ -49,9 +60,11 @@ const deleteUser = async (id) => {
     const result = await pool.query(query, [id]);
 
     return result.rows[0] || null;
-}
+};
 
 module.exports = {
-    createUser, getUserByUsername, getUserById,
+    createUser,
+    getUserByUsername,
+    getUserById,
     deleteUser
-};
+};

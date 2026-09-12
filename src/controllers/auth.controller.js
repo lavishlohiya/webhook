@@ -1,11 +1,15 @@
 const authService = require("../services/auth.service");
 
+/**
+ * Handle user registration requests
+ */
 const register = async (req, res) => {
   try {
     const { username, password } = req.body;
 
     const user = await authService.registerUser(username, password);
 
+    // Sanitize user object before returning in response
     delete user.password;
 
     res.status(201).json(user);
@@ -17,6 +21,9 @@ const register = async (req, res) => {
   }
 };
 
+/**
+ * Handle user login and JWT cookie issuance
+ */
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -24,6 +31,7 @@ const login = async (req, res) => {
     const token = await authService.loginUser(username, password);
     const isProd = process.env.NODE_ENV === "production";
 
+    // Set HTTP-only session cookie containing JWT
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
@@ -42,6 +50,9 @@ const login = async (req, res) => {
   }
 };
 
+/**
+ * Handle user logout and clear authentication cookie
+ */
 const logout = async (req, res) => {
   try {
     const isProd = process.env.NODE_ENV === "production";
@@ -57,10 +68,15 @@ const logout = async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    message: err.message || "Something went wrong";
+    return res.status(400).json({
+      message: err.message || "Something went wrong",
+    });
   }
 };
 
+/**
+ * Handle authenticated user account deletion
+ */
 const deleteUser = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -77,6 +93,9 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
-    register, login, logout,
-    deleteUser
- };
+  register,
+  login,
+  logout,
+  deleteUser,
+};
+

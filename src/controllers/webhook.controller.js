@@ -1,5 +1,8 @@
 const webhookService = require("../services/webhook.service");
 
+/**
+ * Register a target URL for the authenticated user
+ */
 const register = async (req, res) => {
   try {
     const { url } = req.body;
@@ -17,6 +20,9 @@ const register = async (req, res) => {
   }
 };
 
+/**
+ * Fetch all webhooks belonging to the authenticated user
+ */
 const getWebhooks = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -33,6 +39,9 @@ const getWebhooks = async (req, res) => {
   }
 };
 
+/**
+ * Remove a registered target URL for the authenticated user
+ */
 const deleteWebhook = async (req, res) => {
   try {
     const { url } = req.body;
@@ -55,3 +64,4 @@ module.exports = {
   getWebhooks,
   deleteWebhook,
 };
+
